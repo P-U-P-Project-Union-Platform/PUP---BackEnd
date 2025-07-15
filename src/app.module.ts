@@ -16,11 +16,11 @@ const entities = []; // 아직 엔티티가 없다면 비워두세요.
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: configService.get<string>('DATABASE_TYPE', 'mysql') as any,
-        host: configService.get<string>('DATABASE_HOST')!,         // <-- Add '!' here
+        host: configService.get<string>('DATABASE_HOST')!,
         port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get<string>('DATABASE_USERNAME')!, // <-- Add '!' here
-        password: configService.get<string>('DATABASE_PASSWORD')!, // <-- Add '!' here
-        database: configService.get<string>('DATABASE_NAME')!,     // <-- Add '!' here
+        username: configService.get<string>('DATABASE_USERNAME')!,
+        password: configService.get<string>('DATABASE_PASSWORD')!,
+        database: configService.get<string>('DATABASE_NAME')!,
         entities: entities,
         synchronize: true,
         logging: false,
