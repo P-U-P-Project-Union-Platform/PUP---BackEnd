@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ProjectsModule } from './projects/projects.module';
 import * as path from "node:path";
+
 
 // 엔티티가 없으면 빈 배열 유지
 const entities = [];
 
 @Module({
   imports: [
-    // ConfigModule 글로벌 설정, NODE_ENV에 따라 env 파일 선택
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev'
@@ -16,7 +17,6 @@ const entities = [];
           : path.resolve(process.cwd(), '.env'),
     }),
 
-    // TypeORM 비동기 설정
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -32,6 +32,8 @@ const entities = [];
       }),
       inject: [ConfigService],
     }),
+
+    ProjectsModule,
   ],
   controllers: [],
   providers: [],
