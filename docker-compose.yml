@@ -8,25 +8,28 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NODE_ENV: development
       DATABASE_HOST: db
-      DATABASE_USER: root
-      DATABASE_PASSWORD: your_mysql_root_password
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: PUP1
       DATABASE_NAME: pup_db
     depends_on:
       - db
     volumes:
       - .:/app
       - /app/node_modules
+    command: npm run start:dev
 
   db:
     image: mysql:8.0
-    env_file:
-      - ./.env
-    volumes:
-      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: PUP1
+      MYSQL_DATABASE: pup_db
     ports:
       - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
 volumes:
   db_data:

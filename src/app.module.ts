@@ -1,28 +1,33 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {ConfigModule, ConfigService} from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as path from "node:path";
 
-const entities = []; // 아직 엔티티가 없다면 비워두세요.
+// 엔티티가 없으면 빈 배열 유지
+const entities = [];
 
 @Module({
   imports: [
+    // ConfigModule 글로벌 설정, NODE_ENV에 따라 env 파일 선택
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env',
+      envFilePath: process.env.NODE_ENV === 'dev'
+          ? path.resolve(process.cwd(), '.env.dev')
+          : path.resolve(process.cwd(), '.env'),
     }),
+
+    // TypeORM 비동기 설정
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: configService.get<string>('DATABASE_TYPE', 'mysql') as any,
-        host: configService.get<string>('DATABASE_HOST')!,
+        host: configService.get<string>('DATABASE_HOST'),
         port: configService.get<number>('DATABASE_PORT'),
-        username: configService.get<string>('DATABASE_USERNAME')!,
-        password: configService.get<string>('DATABASE_PASSWORD')!,
-        database: configService.get<string>('DATABASE_NAME')!,
+        username: configService.get<string>('DATABASE_USERNAME'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
         entities: entities,
-        synchronize: true,
+        synchronize: true, // 개발환경에서는 true, 운영환경에서는 false 권장
         logging: false,
       }),
       inject: [ConfigService],
