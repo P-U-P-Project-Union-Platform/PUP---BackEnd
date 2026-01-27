@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'; // Import Swagger modules
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,16 @@ async function bootstrap() {
       }),
   );
 
+  // Swagger 설정
+  const config = new DocumentBuilder()
+    .setTitle('PUP Backend API')
+    .setDescription('PUP Backend API documentation')
+    .setVersion('1.0')
+    .addTag('PUP')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document); // Swagger UI를 /api 경로에서 제공
+
   // 2. 환경 변수에서 포트를 가져오거나 기본값으로 3000 사용
   const port = process.env.PORT || 3000;
 
@@ -26,6 +37,7 @@ async function bootstrap() {
 
   // 4. 서버 주소를 터미널에 출력
   console.log(`Application is running on: http://localhost:${port}`);
+  console.log(`Swagger UI is available on: http://localhost:${port}/api`);
 }
 
 bootstrap();

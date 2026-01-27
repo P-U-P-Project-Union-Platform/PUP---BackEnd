@@ -2,6 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProjectsModule } from './projects/projects.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { CommunityModule } from './community/community.module';
+import { RecruitModule } from './recruit/recruit.module';
+import { LikesModule } from './likes/likes.module';
+import { BookmarksModule } from './bookmarks/bookmarks.module';
 import * as path from "node:path";
 
 
@@ -27,13 +33,25 @@ const entities = [];
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
         entities: entities,
-        synchronize: true, // 개발환경에서는 true, 운영환경에서는 false 권장
+        synchronize: true,
         logging: false,
       }),
       inject: [ConfigService],
     }),
 
     ProjectsModule,
+
+    AuthModule,
+
+    UsersModule,
+
+    CommunityModule,
+
+    RecruitModule,
+
+    LikesModule,
+
+    BookmarksModule,
   ],
   controllers: [],
   providers: [],

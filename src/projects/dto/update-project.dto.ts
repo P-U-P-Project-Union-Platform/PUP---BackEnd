@@ -8,13 +8,14 @@ import {
     IsNumber,
     IsDateString,
 } from 'class-validator';
+import { ProjectStatus } from '../entities/project.entity';
 
 export class UpdateProjectDto extends PartialType(CreateProjectDto) {
     @IsOptional()
-    @IsIn(['모집 중', '진행 중', '완료'], {
-        message: '프로젝트 상태는 "모집 중", "진행 중", "완료" 중 하나여야 합니다.',
+    @IsIn(Object.values(ProjectStatus), {
+        message: '유효하지 않은 프로젝트 상태입니다.',
     })
-    status?: '모집 중' | '진행 중' | '완료';
+    status?: ProjectStatus;
 
     @IsOptional()
     @IsIn(['모집 중', '모집 완료', '모집 중단'], {

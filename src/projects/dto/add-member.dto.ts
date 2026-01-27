@@ -1,7 +1,7 @@
-import { IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class AddMemberDto {
-    @IsNumber({}, { message: '멤버 ID는 숫자여야 합니다.' })
+    @IsString({ message: '멤버 ID는 문자열이어야 합니다.' })
     @IsNotEmpty({ message: '멤버 ID는 필수입니다.' })
-    memberId: number;
+    memberId: string;
 }
