@@ -1,31 +1,98 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { ProjectPosition } from './project-position.entity';
+import { ProjectMember } from './project-member.entity';
+
+export enum ProjectCategory {
+  WEB = 'web',
+  MOBILE = 'mobile',
+  AI_ML = 'ai-ml',
+  GAME = 'game',
+  DESIGN = 'design',
+  BACKEND = 'backend',
+  DATA = 'data',
+  ETC = 'etc',
+}
+
+export enum ProjectStatus {
+  IN_PROGRESS = 'in_progress',
+  RECRUITING = 'recruiting',
+  COMPLETED = 'completed',
+}
+
+@Entity('projects')
 export class Project {
-    id: number;
-    title: string;
-    description: string;
-    category: string;
-    status: '모집 중' | '진행 중' | '완료';
-    ownerId: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    recruitmentStatus: '모집 중' | '모집 완료' | '모집 중단';
-    requiredSkills: string[];
-    teamMembers: number[];
+  @Column()
+  title: string;
 
-    // 선택 사항
-    startDate?: Date;
-    endDate?: Date;
+  @Column('text')
+  description: string;
 
-    createdAt: Date;
-    updatedAt: Date;
+  @Column({ nullable: true })
+  thumbnail: string | null;
 
-    constructor(partial: Partial<Project>) {
-        Object.assign(this, partial);
-        // 기본값 설정
-        if (!this.status) this.status = '모집 중';
-        if (!this.recruitmentStatus) this.recruitmentStatus = '모집 중';
-        if (!this.teamMembers) this.teamMembers = [];
-        if (!this.requiredSkills) this.requiredSkills = [];
+  @Column({
+    type: 'enum',
+    enum: ProjectCategory,
+  })
+  category: ProjectCategory;
 
-        if (!this.createdAt) this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
+  @Column('simple-array')
+  techStack: string[];
+
+  @Column('simple-array')
+  tags: string[];
+
+  @Column({ nullable: true, name: 'github_url' })
+  githubUrl: string | null;
+
+  @Column({ type: 'date', name: 'start_date', nullable: true })
+  startDate: Date | null;
+
+  @Column({ type: 'date', name: 'end_date', nullable: true })
+  endDate: Date | null;
+
+  @Column({
+    type: 'enum',
+    enum: ProjectStatus,
+    default: ProjectStatus.IN_PROGRESS,
+  })
+  status: ProjectStatus;
+
+  @Column({ default: 0 })
+  views: number;
+
+  @Column({ default: 0 })
+  likes: number;
+
+  @Column({ name: 'author_id' })
+  authorId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @ManyToOne(() => User, (user) => user.projects)
+  @JoinColumn({ name: 'author_id' })
+  author?: User;
+
+  @OneToMany(() => ProjectPosition, (position) => position.project)
+  positions: ProjectPosition[];
+
+  @OneToMany(() => ProjectMember, (member) => member.project)
+  members: ProjectMember[];
 }
