@@ -45,7 +45,7 @@ export class ProjectsController {
    */
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.projectsService.findOne(+id); // 문자열 ID를 숫자로 변환
+    return this.projectsService.findOne(id); // 문자열 ID를 숫자로 변환
   }
 
   /**
@@ -55,7 +55,7 @@ export class ProjectsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
     // 권한 확인 로직 추가 필요: 프로젝트 소유자만 수정 가능
-    return this.projectsService.update(+id, updateProjectDto);
+    return this.projectsService.update(id, updateProjectDto);
   }
 
   /**
@@ -66,7 +66,7 @@ export class ProjectsController {
   @HttpCode(HttpStatus.NO_CONTENT) // 성공 시 204 No Content 응답
   remove(@Param('id') id: string) {
     // 권한 확인 로직 추가 필요: 프로젝트 소유자만 삭제 가능
-    this.projectsService.remove(+id);
+    this.projectsService.remove(id);
   }
 
   // --- 팀원 모집 관련 API ---
@@ -79,7 +79,7 @@ export class ProjectsController {
   @Post(':id/members')
   addMember(@Param('id') projectId: string, @Body() addMemberDto: AddMemberDto) {
     // addMemberDto.memberId를 사용하여 안전하게 멤버 ID 전달
-    return this.projectsService.addTeamMember(+projectId, addMemberDto.memberId);
+    return this.projectsService.addTeamMember(projectId, addMemberDto.memberId);
   }
 
   /**
@@ -88,6 +88,6 @@ export class ProjectsController {
    */
   @Delete(':id/members/:memberId')
   removeMember(@Param('id') projectId: string, @Param('memberId') memberId: string) {
-    return this.projectsService.removeTeamMember(+projectId, +memberId);
+    return this.projectsService.removeTeamMember(projectId, memberId);
   }
 }
