@@ -7,6 +7,7 @@ import {
     IsIn,
     IsDateString,
 } from 'class-validator';
+import { ProjectStatus } from '../entities/project.entity';
 
 export class CreateProjectDto {
     @IsNotEmpty({ message: '제목은 필수입니다.' })
@@ -16,6 +17,10 @@ export class CreateProjectDto {
     @IsNotEmpty({ message: '설명은 필수입니다.' })
     @IsString({ message: '설명은 문자열이어야 합니다.' })
     description: string;
+
+    @IsOptional()
+    @IsString({ message: '썸네일은 문자열이어야 합니다.' })
+    thumbnail?: string;
 
     @IsNotEmpty({ message: '카테고리는 필수입니다.' })
     @IsString({ message: '카테고리는 문자열이어야 합니다.' })
@@ -30,10 +35,18 @@ export class CreateProjectDto {
     requiredSkills?: string[];
 
     @IsOptional()
+    @IsString({ message: 'GitHub URL은 문자열이어야 합니다.' })
+    githubUrl?: string;
+
+    @IsOptional()
     @IsDateString({}, { message: '시작일은 유효한 날짜 형식이어야 합니다.' })
     startDate?: string;
 
     @IsOptional()
     @IsDateString({}, { message: '종료일은 유효한 날짜 형식이어야 합니다.' })
     endDate?: string;
+
+    @IsOptional()
+    @IsIn(Object.values(ProjectStatus), { message: '유효하지 않은 프로젝트 상태입니다.' })
+    status?: ProjectStatus;
 }
